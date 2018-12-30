@@ -1,0 +1,48 @@
+version: '3.6'
+services:
+
+  nginx:
+    image: nginx:alpine
+    container_name: wp_nginx
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./cache/nginx:/var/cache/nginx
+      - ./logs/nginx:/var/log/nginx
+      - ./wordpress:/var/www/html
+    links:
+      - wordpress
+    restart: always
+
+  redis:
+    image: redis:alpine
+    container_name: wp_redis
+    command: redis-server --requirepass password
+    ports:
+      - '6379:6379'
+    restart: always
+
+  mysql:
+    image: mariadb:latest
+    container_name: wp_mysql
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    restart: always
+
+  wordpress:
+    build: .
+    container_name: wp_wordpress
+    volumes:
+      - ./wordpress:/var/www/html
+    environment:
+      - WORDPRESS_DB_NAME=wordpress
+      - WORDPRESS_TABLE_PREFIX=wp_
+      - WORDPRESS_DB_HOST=mysql
+      - WORDPRESS_DB_PASSWORD=password
+    links:
+      - mysql
+    restart: always

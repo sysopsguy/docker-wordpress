@@ -17,22 +17,22 @@ WordPress is an online, open source website creation tool written in PHP. But in
 ## Pre-Installation
 Please change "password" to something more secure in ".env"
 
-# WORDPRESS
-* WORDPRESS_DB_NAME=wordpress
-* WORDPRESS_TABLE_PREFIX=wp_
-* WORDPRESS_DB_HOST=mysql
-* WORDPRESS_DB_USER=root
-* WORDPRESS_DB_PASSWORD=password
+## WORDPRESS
+`WORDPRESS_DB_NAME=wordpress`  
+`WORDPRESS_TABLE_PREFIX=wp_`  
+`WORDPRESS_DB_HOST=mysql`  
+`WORDPRESS_DB_USER=root`  
+`WORDPRESS_DB_PASSWORD=password`
 
-# MARIADB
-* MYSQL_ROOT_PASSWORD=password
-* MYSQL_USER=root
-* MYSQL_PASSWORD=password
-* MYSQL_DATABASE=wordpress
+## MARIADB
+`MYSQL_ROOT_PASSWORD=password`  
+`MYSQL_USER=root`  
+`MYSQL_PASSWORD=password`  
+`MYSQL_DATABASE=wordpress`
 
-# REDIS SERVER
-* REDIS_MAXMEMORY=128m
-* REDIS_PASSWORD=password
+## REDIS SERVER
+`REDIS_MAXMEMORY=128m`  
+`REDIS_PASSWORD=password`
 
 ## Installation
 
@@ -40,13 +40,7 @@ Please change "password" to something more secure in ".env"
 
     ```$ git clone https://github.com/sysopsguy/docker-wordpress.git```
 
-2. Copy Nginx and Wordpress configuration files
-
-    ```$ cd docker-wordpress```
-
-    ```$ cp nginx.conf nginx/nginx.conf```
-
-3. Start up docker-compose
+2. Start up docker-compose
 
     ```$ docker-compose up -d```
 
@@ -54,18 +48,20 @@ Please change "password" to something more secure in ".env"
 Now access your favourite web browser 
 
 1. Go to http://localhost to set up wordpress 
-2. Create admin user
+2. Create WP-Admin user
 3. Go to Plugins > Add New > Search Plugins
 4. Type "redis object cache"
 5. Click Install now and active
 6. Go to plugins setting > Enable Object Cache
 7. Define setting in "wp-config.php"
-  ```define('WP_CACHE', true);```
-  ```define('WP_REDIS_HOST', 'redis');```
-  ```define('WP_REDIS_PORT', '6379');```
-  ```define('WP_REDIS_PASSWORD', '$3cr3t');```
-  ```define('FS_METHOD','direct');```
-8. docker-compose restart
+
+ 	  ```define('WP_CACHE', true);```  
+ 	  ```define('WP_REDIS_HOST', 'redis');```  
+ 	  ```define('WP_REDIS_PORT', '6379');```  
+ 	  ```define('WP_REDIS_PASSWORD', '$3cr3t');```  
+ 	  ```define('FS_METHOD','direct');```
+ 	  
+8. run command ```docker-compose restart```
 
 if you cannot find the plugins simply go to https://wordpress.org/plugins/redis-cache/ download and install it manually
 
@@ -83,7 +79,7 @@ Remove Docker Containers:
 
 Removing all related directories:
 
- ```$ rm -rf logs/ mysql/ wordpress/ nginx/ cache/```
+ ```$ rm -rf logs/ mysql/ wordpress/ nginx/```
 
 **Optional**: Removing all Docker images:
 
@@ -91,6 +87,8 @@ Removing all related directories:
 
 ## Release History
 
+* 0.1.1
+    * Update PHP-FPM to version 7.3
 * 0.1.0
     * The first release
 

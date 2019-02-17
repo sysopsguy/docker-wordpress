@@ -1,48 +1,78 @@
-version: '3.6'
+version: '3'
 services:
 
   nginx:
     image: nginx:alpine
-    container_name: wp_nginx
+    container_name: nginx
+    restart: always
     ports:
       - '80:80'
       - '443:443'
     volumes:
       - ./nginx:/etc/nginx/conf.d
-      - ./cache/nginx:/var/cache/nginx
       - ./logs/nginx:/var/log/nginx
       - ./wordpress:/var/www/html
+      - ./ssl:/var/www/ssl
     links:
-      - wordpress
+     - wordpress
+
+  # MARIADB
+  mysql:
+    image: mariadb:10.3
+    container_name: mysql
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
     restart: always
 
+  wordpress:
+    build: ./build-wordpress
+    container_name: wordpress
+    volumes:
+      - ./wordpress:/var/www/html
+
+    environment:
+      - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME}
+      - WORDPRESS_TABLE_PREFIX=${WORDPRESS_TABLE_PREFIX}
+      - WORDPRESS_DB_HOST=${WORDPRESS_DB_HOST}
+      - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
+      - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
+    links:
+      - mysql
+    restart: always
+    
+  # REDIS DOCKER - https://github.com/wodby/redis
   redis:
-    image: redis:alpine
-    container_name: wp_redis
-    command: redis-server --requirepass password
+    image: wodby/redis:5
+    container_name: redis
+    environment:
+      - REDIS_MAXMEMORY=${REDIS_MAXMEMORY}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     ports:
       - '6379:6379'
     restart: always
 
-  mysql:
-    image: mariadb:latest
-    container_name: wp_mysql
-    volumes:
-      - ./mysql:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=password
-    restart: always
-
-  wordpress:
-    build: .
-    container_name: wp_wordpress
-    volumes:
-      - ./wordpress:/var/www/html
-    environment:
-      - WORDPRESS_DB_NAME=wordpress
-      - WORDPRESS_TABLE_PREFIX=wp_
-      - WORDPRESS_DB_HOST=mysql
-      - WORDPRESS_DB_PASSWORD=password
-    links:
-      - mysql
-    restart: always
+  # PHPMYADMIN (PMA) - https://hub.docker.com/r/bitnami/phpmyadmin
+  #phpmyadmin:
+  #    image: bitnami/phpmyadmin:4
+  #    container_name: phpmyadmin
+  #    links:
+  #    - mysql
+  #    ports:
+  #        - '8080:80'
+  #        - '8443:443'
+  #    environment:
+  #      - PMA_HOST=${PMA_HOST}
+  #      - DATABASE_HOST=${DATABASE_HOST}
+  #      - MYSQL_USER=${MYSQL_USER}
+  #      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+  #      - PHPMYADMIN_PASSWORD=${PHPMYADMIN_PASSWORD}
+  #    restart: always
+  #    volumes:
+  #     - ./phpmyadmin:/bitnami

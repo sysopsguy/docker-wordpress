@@ -1,6 +1,6 @@
 # Wordpress Docker-Compose
 
-> A simple docker-compose Wordpress with Nginx, PHP-FPM, MariaDB, and Redis based on Alpine Linux image 
+> A simple docker-compose Wordpress with Nginx, PHP-FPM, MariaDB, and Redis stack 
 
 ## What is Wordpress
 WordPress is an online, open source website creation tool written in PHP. But in non-geek speak, it’s probably the easiest and most powerful blogging and website content management system (or CMS) in existence today.
@@ -9,60 +9,15 @@ WordPress is an online, open source website creation tool written in PHP. But in
 
 * Create persistant volume mount to match directories on host for wordpress containers
 * mysql: The database files for MariaDB 
-* wordpress: The WordPress media files
+* nginx: The Nginx configuration files
+* wordpress: The WordPress root folder
 * logs/nginx: The Nginx log files (error.log, access.log)
+* ssl: certificate folder for HTTPS configuration
 
 ## Pre-Installation
-Please change "password" to something more secure in 
+Please change "password" to something more secure in ".env"
 
 * docker-compose.yml
-
-```
-redis:
-    image: redis:alpine
-    container_name: wp_redis
-    command: redis-server --requirepass password
-    ports:
-      - '6379:6379'
-    restart: always
-```
-```
-mysql:
-    image: mariadb:latest
-    container_name: wp_mysql
-    volumes:
-      - ./mysql:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=password
-    restart: always   
-```
-
-```
-wordpress:
-    build: .
-    container_name: wp_wordpress
-    volumes:
-      - ./wordpress:/var/www/html
-    environment:
-      - WORDPRESS_DB_NAME=wordpress
-      - WORDPRESS_TABLE_PREFIX=wp_
-      - WORDPRESS_DB_HOST=mysql
-      - WORDPRESS_DB_PASSWORD=password
-```
-
-* wp-config.php.example
-
-```
-// ** MySQL settings - You can get this info from your web host ** //
-/** The name of the database for WordPress */
-define('DB_NAME', 'wordpress');
-
-/** MySQL database username */
-define('DB_USER', 'root');
-
-/** MySQL database password */
-define('DB_PASSWORD', 'password');
-```
 
 ## Installation
 
@@ -74,10 +29,7 @@ define('DB_PASSWORD', 'password');
 
     ```$ cd docker-wordpress```
 
-    ```$ cp nginx.conf.example nginx/nginx.conf```
-
-    ```$ cp wp-config.php.example wordpress/wp-config.php```
-
+    ```$ cp nginx.conf nginx/nginx.conf```
 
 3. Start up docker-compose
 

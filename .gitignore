@@ -35,7 +35,6 @@ Temporary Items
 logs/
 mysql/
 wordpress/
-nginx/
 ssl/
 
 # End of https://www.gitignore.io/api/macos

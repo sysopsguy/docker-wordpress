@@ -59,6 +59,13 @@ Now access your favourite web browser
 4. Type "redis object cache"
 5. Click Install now and active
 6. Go to plugins setting > Enable Object Cache
+7. Define setting in "wp-config.php"
+  ```define('WP_CACHE', true);```
+  ```define('WP_REDIS_HOST', 'redis');```
+  ```define('WP_REDIS_PORT', '6379');```
+  ```define('WP_REDIS_PASSWORD', '$3cr3t');```
+  ```define('FS_METHOD','direct');```
+8. docker-compose restart
 
 if you cannot find the plugins simply go to https://wordpress.org/plugins/redis-cache/ download and install it manually
 

@@ -17,7 +17,22 @@ WordPress is an online, open source website creation tool written in PHP. But in
 ## Pre-Installation
 Please change "password" to something more secure in ".env"
 
-* docker-compose.yml
+# WORDPRESS
+WORDPRESS_DB_NAME=wordpress
+WORDPRESS_TABLE_PREFIX=wp_
+WORDPRESS_DB_HOST=mysql
+WORDPRESS_DB_USER=root
+WORDPRESS_DB_PASSWORD=password
+
+# MARIADB
+MYSQL_ROOT_PASSWORD=password
+MYSQL_USER=root
+MYSQL_PASSWORD=password
+MYSQL_DATABASE=wordpress
+
+# REDIS SERVER
+REDIS_MAXMEMORY=128m
+REDIS_PASSWORD=password
 
 ## Installation
 
